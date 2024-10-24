@@ -1,12 +1,14 @@
+import { Offer } from 'app/types/offer';
 import React from 'react';
 import Header from '../../components/header/header';
-import PlaceCard from '../../components/place-card/place-card';
+import OffersList from '../../components/offers-list/offers-list';
 
 type MainPageProps = {
   places: number;
+  offers: Offer[];
 };
 
-const MainPage: React.FC<MainPageProps> = ({ places }) => {
+const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
   const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
   const sortingOptions = [
     'Popular',
@@ -54,53 +56,7 @@ const MainPage: React.FC<MainPageProps> = ({ places }) => {
                   ))}
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <PlaceCard
-                  isPremium
-                  imageSrc="img/apartment-01.jpg"
-                  price={120}
-                  isBookmarked={false}
-                  rating={4}
-                  name="Beautiful & luxurious apartment at great location"
-                  type="Apartment"
-                />
-                <PlaceCard
-                  isPremium={false}
-                  imageSrc="img/room.jpg"
-                  price={80}
-                  isBookmarked
-                  rating={4}
-                  name="Wood and stone place"
-                  type="Room"
-                />
-                <PlaceCard
-                  isPremium={false}
-                  imageSrc="img/apartment-02.jpg"
-                  price={132}
-                  isBookmarked={false}
-                  rating={4}
-                  name="Canal View Prinsengracht"
-                  type="Apartment"
-                />
-                <PlaceCard
-                  isPremium
-                  imageSrc="img/apartment-03.jpg"
-                  price={180}
-                  isBookmarked={false}
-                  rating={5}
-                  name="Nice, cozy, warm big bed apartment"
-                  type="Apartment"
-                />
-                <PlaceCard
-                  isPremium={false}
-                  imageSrc="img/room.jpg"
-                  price={80}
-                  isBookmarked
-                  rating={4}
-                  name="Wood and stone place"
-                  type="Room"
-                />
-              </div>
+              <OffersList offers={offers} />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>
