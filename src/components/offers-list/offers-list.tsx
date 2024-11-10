@@ -1,14 +1,24 @@
 import PlaceCard from '@components/place-card/place-card';
 import { Offer } from 'app/types/offer';
 import { OfferDetails } from 'app/types/offer-details';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type OffersListProps = {
   offers: Offer[] | OfferDetails[];
+  onActiveOfferChange: (offerId: string | number | null) => void;
 };
 
-export default function OffersList({ offers }: OffersListProps): JSX.Element {
-  const [, setActiveOffer] = useState<Offer | OfferDetails | null>(null);
+export default function OffersList({
+  offers,
+  onActiveOfferChange,
+}: OffersListProps): JSX.Element {
+  const [activeOffer, setActiveOffer] = useState<Offer | OfferDetails | null>(
+    null
+  );
+
+  useEffect(() => {
+    onActiveOfferChange(activeOffer ? activeOffer.id : null);
+  }, [activeOffer, onActiveOfferChange]);
 
   const handleMouseEnter = (offer: Offer | OfferDetails) => {
     setActiveOffer(offer);
