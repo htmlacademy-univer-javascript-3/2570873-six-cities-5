@@ -1,6 +1,7 @@
 import { Offer } from 'app/types/offer';
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../components/header/header';
+import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 
 type MainPageProps = {
@@ -9,7 +10,16 @@ type MainPageProps = {
 };
 
 const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
-  const cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+  const [activeOffer, setActiveOffer] = useState<string | number | null>(null);
+  const selectedOffer = offers.find((offer) => offer.id === activeOffer);
+  const cities = [
+    'Paris',
+    'Cologne',
+    'Brussels',
+    'Amsterdam',
+    'Hamburg',
+    'Dusseldorf',
+  ];
   const sortingOptions = [
     'Popular',
     'Price: low to high',
@@ -39,7 +49,9 @@ const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{places} places to stay in Amsterdam</b>
+              <b className="places__found">
+                {places} places to stay in Amsterdam
+              </b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -56,10 +68,17 @@ const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
                   ))}
                 </ul>
               </form>
-              <OffersList offers={offers} />
+              <OffersList
+                offers={offers}
+                onActiveOfferChange={setActiveOffer}
+              />
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map
+                city={offers[0].city}
+                offers={offers}
+                selectedOffer={selectedOffer}
+              />
             </div>
           </div>
         </div>
