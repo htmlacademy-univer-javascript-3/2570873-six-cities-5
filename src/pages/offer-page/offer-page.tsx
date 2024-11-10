@@ -1,14 +1,20 @@
+import { offers } from '@mocks/offers';
 import { OffersInDetails } from 'app/types/offer-details';
+import { Reviews } from 'app/types/review';
 import { useParams } from 'react-router-dom';
 import ReviewSendingForm from '../../components/comment-form/comment-form';
-import OffersList from '../../components/offers-list/offers-list';
-import { reviews } from '../../mocks/reviews';
+import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
+import ReviewsList from '../../components/review-list/review-list';
 
 type OfferPageProps = {
   offersInDetails: OffersInDetails;
+  reviews: Reviews | undefined;
 };
 
-export default function OfferPage({ offersInDetails }: OfferPageProps): JSX.Element {
+export default function OfferPage({
+  offersInDetails,
+  reviews,
+}: OfferPageProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const offer = offersInDetails.find((o) => o.id === id);
 
@@ -23,7 +29,13 @@ export default function OfferPage({ offersInDetails }: OfferPageProps): JSX.Elem
           <div className="header__wrapper">
             <div className="header__left">
               <a className="header__logo-link" href="/">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
+                <img
+                  className="header__logo"
+                  src="img/logo.svg"
+                  alt="6 cities logo"
+                  width="81"
+                  height="41"
+                />
               </a>
             </div>
           </div>
@@ -36,7 +48,11 @@ export default function OfferPage({ offersInDetails }: OfferPageProps): JSX.Elem
             <div className="offer__gallery">
               {offer.images.map((image) => (
                 <div key={image} className="offer__image-wrapper">
-                  <img className="offer__image" src={image} alt="Photo studio" />
+                  <img
+                    className="offer__image"
+                    src={image}
+                    alt="Photo studio"
+                  />
                 </div>
               ))}
             </div>
@@ -60,15 +76,26 @@ export default function OfferPage({ offersInDetails }: OfferPageProps): JSX.Elem
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{ width: `${(offer.rating / 5) * 100}%` }}></span>
+                  <span
+                    style={{ width: `${(offer.rating / 5) * 100}%` }}
+                    // eslint-disable-next-line react/jsx-closing-tag-location
+                  ></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">{offer.rating}</span>
+                <span className="offer__rating-value rating__value">
+                  {offer.rating}
+                </span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">{offer.type}</li>
-                <li className="offer__feature offer__feature--bedrooms">{offer.bedrooms} Bedrooms</li>
-                <li className="offer__feature offer__feature--adults">Max {offer.maxAdults} adults</li>
+                <li className="offer__feature offer__feature--entire">
+                  {offer.type}
+                </li>
+                <li className="offer__feature offer__feature--bedrooms">
+                  {offer.bedrooms} Bedrooms
+                </li>
+                <li className="offer__feature offer__feature--adults">
+                  Max {offer.maxAdults} adults
+                </li>
               </ul>
               <div className="offer__price">
                 <b className="offer__price-value">&euro;{offer.price}</b>
@@ -88,39 +115,31 @@ export default function OfferPage({ offersInDetails }: OfferPageProps): JSX.Elem
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
-                    <img className="offer__avatar user__avatar" src={offer.host.avatarUrl} width="74" height="74" alt="Host avatar" />
+                    <img
+                      className="offer__avatar user__avatar"
+                      src={offer.host.avatarUrl}
+                      width="74"
+                      height="74"
+                      alt="Host avatar"
+                    />
                   </div>
                   <span className="offer__user-name">{offer.host.name}</span>
-                  {offer.host.isPro && <span className="offer__user-status">Pro</span>}
+                  {offer.host.isPro && (
+                    <span className="offer__user-status">Pro</span>
+                  )}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">{offer.description}</p>
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
-                <ul className="reviews__list">
-                  {reviews.map((review) => (
-                    <li key={review.id} className="reviews__item">
-                      <div className="reviews__user user">
-                        <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                          <img className="reviews__avatar user__avatar" src={review.user.avatarUrl} width="54" height="54" alt="Reviews avatar" />
-                        </div>
-                        <span className="reviews__user-name">{review.user.name}</span>
-                      </div>
-                      <div className="reviews__info">
-                        <div className="reviews__rating rating">
-                          <div className="reviews__stars rating__stars">
-                            <span style={{ width: `${(review.rating / 5) * 100}%` }}></span>
-                            <span className="visually-hidden">Rating</span>
-                          </div>
-                        </div>
-                        <p className="reviews__text">{review.comment}</p>
-                        <time className="reviews__time" dateTime={new Date(review.date).toISOString()}>{new Date(review.date).toLocaleString('default', { month: 'long', year: 'numeric' })}</time>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <h2 className="reviews__title">
+                  Reviews &middot;{' '}
+                  <span className="reviews__amount">
+                    {reviews?.length || 0}
+                  </span>
+                </h2>
+                <ReviewsList reviews={reviews} />
                 <ReviewSendingForm />
               </section>
             </div>
@@ -128,10 +147,9 @@ export default function OfferPage({ offersInDetails }: OfferPageProps): JSX.Elem
           <section className="offer__map map"></section>
         </section>
         <div className="container">
-          <section className="near-places places">
-            <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OffersList offers={offersInDetails} />
-          </section>
+          <div className="container">
+            <NearbyOffersList offers={offers} />
+          </div>
         </div>
       </main>
     </div>

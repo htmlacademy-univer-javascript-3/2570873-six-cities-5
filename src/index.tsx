@@ -1,3 +1,4 @@
+import { reviews } from '@mocks/reviews.ts';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app/app.tsx';
@@ -10,6 +11,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App places={offers.length} offers={offers} offersInDetails={offersInDetails} />
+    <App
+      places={offers.length}
+      offers={offers}
+      offersInDetails={offersInDetails}
+      reviews={reviews}
+    />
   </React.StrictMode>
 );
