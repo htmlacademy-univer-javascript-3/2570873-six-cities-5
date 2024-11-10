@@ -9,20 +9,35 @@ import LoginPage from '../pages/login-page/login-page';
 import MainPage from '../pages/main-page/main-page';
 import NotFoundPage from '../pages/not-found-page/not-found-page';
 import OfferPage from '../pages/offer-page/offer-page';
+import { Reviews } from './types/review';
 
 type AppProps = {
   places: number;
   offers: Offer[];
   offersInDetails: OffersInDetails;
+  reviews: Reviews;
 };
 
-const App: React.FC<AppProps> = ({ places, offers, offersInDetails }) => (
+const App: React.FC<AppProps> = ({
+  places,
+  offers,
+  offersInDetails,
+  reviews,
+}) => (
   <HelmetProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage places={places} offers={offers} />} />
+        <Route
+          path="/"
+          element={<MainPage places={places} offers={offers} />}
+        />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/offer/:id" element={<OfferPage offersInDetails={offersInDetails} />} />
+        <Route
+          path="/offer/:id"
+          element={
+            <OfferPage offersInDetails={offersInDetails} reviews={reviews} />
+          }
+        />
         <Route
           path="/favorites"
           element={
