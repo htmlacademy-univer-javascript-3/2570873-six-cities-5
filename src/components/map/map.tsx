@@ -31,7 +31,12 @@ function Map(props: MapProps): JSX.Element {
   const map = useMap(mapRef, city);
 
   useEffect(() => {
-    if (map && offers.length > 0) {
+    if (map) {
+      // Центрируем карту на текущем городе
+      map.setView(
+        [city.location.latitude, city.location.longitude],
+        city.location.zoom
+      );
       const markerLayer = layerGroup().addTo(map);
       offers.forEach((offer) => {
         const marker = new Marker({
@@ -48,7 +53,7 @@ function Map(props: MapProps): JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, offers, selectedOffer]);
+  }, [map, city, offers, selectedOffer]);
 
   return (
     <div

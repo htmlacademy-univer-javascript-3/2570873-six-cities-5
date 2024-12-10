@@ -1,9 +1,8 @@
-import { reviews } from '@mocks/reviews.ts';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import App from './app/app.tsx';
-import { offersInDetails } from './mocks/offer-details.ts';
-import { offers } from './mocks/offers.ts';
+import { store } from './store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,11 +10,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App
-      places={offers.length}
-      offers={offers}
-      offersInDetails={offersInDetails}
-      reviews={reviews}
-    />
+    <Provider store={store}>
+      <App/>
+    </Provider>
   </React.StrictMode>
 );

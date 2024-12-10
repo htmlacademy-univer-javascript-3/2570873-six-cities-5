@@ -1,25 +1,23 @@
-import { Offer } from 'app/types/offer';
-import React, { useState } from 'react';
+import { Offers } from 'app/types/offer';
+import React, { useEffect, useState } from 'react';
+import CitiesList from '../../components/cities-list/cities-list';
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
+import { Cities } from '../../const';
+import { useAppSelector } from '../../hooks/index';
 
-type MainPageProps = {
-  places: number;
-  offers: Offer[];
-};
 
-const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
+const MainPage: React.FC = () => {
+  const offers = useAppSelector((state) => state.offersList);
+  const [currentCityOffers, setCurrentCityOffers] = useState<Offers>(offers);
   const [activeOffer, setActiveOffer] = useState<string | number | null>(null);
   const selectedOffer = offers.find((offer) => offer.id === activeOffer);
-  const cities = [
-    'Paris',
-    'Cologne',
-    'Brussels',
-    'Amsterdam',
-    'Hamburg',
-    'Dusseldorf',
-  ];
+  const city = useAppSelector((state) => state.city);
+  useEffect(() => {
+    const filteredOffers = offers.filter((offer) => offer.city.name === city);
+    setCurrentCityOffers(filteredOffers);
+  }, [city, offers]);
   const sortingOptions = [
     'Popular',
     'Price: low to high',
@@ -34,15 +32,7 @@ const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
-            <ul className="locations__list tabs__list">
-              {cities.map((city) => (
-                <li key={city} className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>{city}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <CitiesList cities={Cities}/>
           </section>
         </div>
         <div className="cities">
@@ -50,7 +40,7 @@ const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {places} places to stay in Amsterdam
+                {currentCityOffers.length} places to stay in {city}
               </b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
@@ -69,14 +59,15 @@ const MainPage: React.FC<MainPageProps> = ({ places, offers }) => {
                 </ul>
               </form>
               <OffersList
-                offers={offers}
+                offers={currentCityOffers}
                 onActiveOfferChange={setActiveOffer}
               />
             </section>
             <div className="cities__right-section">
               <Map
-                city={offers[0].city}
-                offers={offers}
+                city={currentCityOffers[0]?.city || {
+                  location: { latitude: 0, longitude: 0, zoom: 10 }}}
+                offers={currentCityOffers}
                 selectedOffer={selectedOffer}
               />
             </div>

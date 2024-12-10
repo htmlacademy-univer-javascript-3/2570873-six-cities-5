@@ -1,21 +1,14 @@
-import { offers } from '@mocks/offers';
-import { OffersInDetails } from 'app/types/offer-details';
-import { Reviews } from 'app/types/review';
 import { useParams } from 'react-router-dom';
 import ReviewSendingForm from '../../components/comment-form/comment-form';
 import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
 import ReviewsList from '../../components/review-list/review-list';
+import { useAppSelector } from '../../hooks/index';
 
-type OfferPageProps = {
-  offersInDetails: OffersInDetails;
-  reviews: Reviews | undefined;
-};
-
-export default function OfferPage({
-  offersInDetails,
-  reviews,
-}: OfferPageProps): JSX.Element {
+export default function OfferPage(): JSX.Element {
   const { id } = useParams<{ id: string }>();
+  const offers = useAppSelector((state) => state.offersList);
+  const reviews = useAppSelector((state) => state.reviews);
+  const offersInDetails = useAppSelector((state) => state.offersInDetails);
   const offer = offersInDetails.find((o) => o.id === id);
 
   if (!offer) {
