@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import OffersList from '../../components/offers-list/offers-list';
-import { offers } from '../../mocks/offers';
+import { useAppSelector } from '../../hooks/index';
 
 const FavoritesPage: React.FC = () => {
   const [, setActiveOfferId] = useState<string | number | null>(null);
+  const offers = useAppSelector((state) => state.offersList);
   const favoriteOffers = offers.filter((offer) => offer.isFavorite);
 
   const handleActiveOfferChange = (offerId: string | number | null) => {
