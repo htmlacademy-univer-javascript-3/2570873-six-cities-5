@@ -64,3 +64,10 @@ export const Cities = [
     id: 6,
   },
 ];
+
+export enum SortOptions {
+    Popular = 'Popular',
+    PriceLowToHigh = 'Price: low to high',
+    PriceHighToLow = 'Price: high to low',
+    TopRated = 'Top rated first',
+  }
