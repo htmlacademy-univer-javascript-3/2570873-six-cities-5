@@ -10,6 +10,7 @@ import OfferPage from '../pages/offer-page/offer-page';
 import { setOffersInDetails, setOffersList, setReviews } from '../store/action';
 
 export default function App(): JSX.Element {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const offers = useAppSelector((state) => state.offersList);
   const reviews = useAppSelector((state) => state.reviews);
   const offersInDetails = useAppSelector((state) => state.offersInDetails);
@@ -36,7 +37,7 @@ export default function App(): JSX.Element {
           <Route
             path="/favorites"
             element={
-              <PrivateRoute>
+              <PrivateRoute authorizationStatus={authorizationStatus}>
                 <FavoritesPage />
               </PrivateRoute>
             }

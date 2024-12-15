@@ -1,11 +1,8 @@
-import { offersInDetails } from '@mocks/offer-details';
-import { offers } from '@mocks/offers';
-import { reviews } from '@mocks/reviews';
 import { createReducer, createSelector } from '@reduxjs/toolkit';
 import { Offers } from '../../src/app/types/offer';
 import { OffersInDetails } from '../../src/app/types/offer-details';
 import { Reviews } from '../../src/app/types/review';
-import { SortOptions } from '../const';
+import { AuthorizationStatus, SortOptions } from '../const';
 import { changeCity, setOffersInDetails, setOffersList, setReviews, setSortOption } from './action';
 
 
@@ -15,6 +12,9 @@ type StateType = {
   reviews: Reviews;
   offersInDetails: OffersInDetails;
   sortOption: SortOptions;
+  authorizationStatus: AuthorizationStatus;
+  error: string | null;
+  isOffersDataLoading: boolean;
 };
 
 const initialState: StateType = {
@@ -23,6 +23,9 @@ const initialState: StateType = {
   reviews: [],
   offersInDetails: [],
   sortOption: SortOptions.Popular,
+  authorizationStatus: AuthorizationStatus.Unknown,
+  error: null,
+  isOffersDataLoading: false,
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -30,14 +33,14 @@ export const reducer = createReducer(initialState, (builder) => {
     .addCase(changeCity, (state, { payload }) => {
       state.city = payload;
     })
-    .addCase(setOffersList, (state) => {
-      state.offersList = offers;
+    .addCase(setOffersList, (state, action) => {
+      state.offersList = action.payload;
     })
-    .addCase(setReviews, (state) => {
-      state.reviews = reviews;
+    .addCase(setReviews, (state, action) => {
+      state.reviews = action.payload;
     })
-    .addCase(setOffersInDetails, (state) => {
-      state.offersInDetails = offersInDetails;
+    .addCase(setOffersInDetails, (state, action) => {
+      state.offersInDetails = action.payload;
     })
     .addCase(setSortOption, (state, { payload }) => {
       state.sortOption = payload;
@@ -51,7 +54,7 @@ export const selectFilteredAndSortedOffers = createSelector(
     (state: StateType) => state.sortOption,
   ],
   (offersList, city, sortOption) => {
-    const filteredOffers = offers.filter((offer) => offer.city.name === city);
+    const filteredOffers = offersList.filter((offer) => offer.city.name === city);
     switch (sortOption) {
       case SortOptions.PriceLowToHigh:
         return [...filteredOffers].sort((a, b) => a.price - b.price);
