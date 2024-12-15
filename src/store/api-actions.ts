@@ -6,7 +6,7 @@ import { Offers } from '../app/types/offer';
 import { AppDispatch, State } from '../app/types/state';
 import { User } from '../app/types/user';
 import { dropToken, saveToken } from '../services/token';
-import { requireAuthorization, setOffersDataLoadingStatus, setOffersList } from '../store/action';
+import { requireAuthorization, setOffersDataLoadingStatus, setOffersList, setUserEmail } from '../store/action';
 
 export const fetchOffersAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch;
@@ -30,8 +30,10 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
   'user/checkAuth',
   async (_arg, {dispatch, extra: api}) => {
     try {
-      await api.get(APIRoute.Login);
+      const response = await api.get(APIRoute.Login);
+      const data = response.data as { email: string };
       dispatch(requireAuthorization(AuthorizationStatus.Auth));
+      dispatch(setUserEmail(data.email));
     } catch {
       dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
     }
@@ -44,10 +46,13 @@ export const loginAction = createAsyncThunk<void, AuthData, {
   extra: AxiosInstance;
 }>(
   'user/login',
-  async ({login: email, password}, {dispatch, extra: api}) => {
-    const {data: {token}} = await api.post<User>(APIRoute.Login, {email, password});
+  async ({ login: email, password }, { dispatch, extra: api }) => {
+    const { data } = await api.post<User>(APIRoute.Login, { email, password });
+    const { token, email: userEmail } = data;
+
     saveToken(token);
     dispatch(requireAuthorization(AuthorizationStatus.Auth));
+    dispatch(setUserEmail(userEmail));
   },
 );
 
