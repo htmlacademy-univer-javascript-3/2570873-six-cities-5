@@ -1,11 +1,15 @@
-import React from 'react';
+import { APIRoute, AuthorizationStatus } from '@const';
 import { Navigate } from 'react-router-dom';
 
-interface PrivateRouteProps {
-  hasAccess?: boolean;
+type PrivateRouteProps = {
+  authorizationStatus: AuthorizationStatus;
   children: JSX.Element;
 }
-
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ hasAccess = false, children }) => hasAccess ? children : <Navigate to="/login" replace />;
-
-export default PrivateRoute;
+export default function PrivateRoute(props: PrivateRouteProps): JSX.Element {
+  const {authorizationStatus, children} = props;
+  return (
+    authorizationStatus === AuthorizationStatus.Auth
+      ? children
+      : <Navigate to={APIRoute.Login} />
+  );
+}
