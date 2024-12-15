@@ -3,7 +3,7 @@ import { Offers } from '../../src/app/types/offer';
 import { OffersInDetails } from '../../src/app/types/offer-details';
 import { Reviews } from '../../src/app/types/review';
 import { AuthorizationStatus, SortOptions } from '../const';
-import { changeCity, setOffersInDetails, setOffersList, setReviews, setSortOption } from './action';
+import { changeCity, setOffersInDetails, setOffersList, setReviews, setSortOption, setUserEmail } from './action';
 
 
 type StateType = {
@@ -15,6 +15,7 @@ type StateType = {
   authorizationStatus: AuthorizationStatus;
   error: string | null;
   isOffersDataLoading: boolean;
+  userEmail: string;
 };
 
 const initialState: StateType = {
@@ -26,6 +27,7 @@ const initialState: StateType = {
   authorizationStatus: AuthorizationStatus.Unknown,
   error: null,
   isOffersDataLoading: false,
+  userEmail: '',
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -44,6 +46,9 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setSortOption, (state, { payload }) => {
       state.sortOption = payload;
+    })
+    .addCase(setUserEmail, (state, { payload }) => {
+      state.userEmail = payload;
     });
 });
 
