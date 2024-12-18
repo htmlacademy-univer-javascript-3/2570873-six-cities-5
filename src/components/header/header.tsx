@@ -44,12 +44,9 @@ const Header: React.FC = () => {
                     </Link>
                   </li>
                   <li className="header__nav-item">
-                    <button
-                      className="header__nav-link"
-                      onClick={handleSignOut}
-                    >
+                    <Link className="header__nav-link" to={AppRoute.Root} onClick={handleSignOut}>
                       <span className="header__signout">Sign out</span>
-                    </button>
+                    </Link>
                   </li>
                 </>
               ) : (
