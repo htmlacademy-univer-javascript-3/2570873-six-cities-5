@@ -1,7 +1,9 @@
-import { AppRoute } from '@const';
+import { AppRoute, AuthorizationStatus } from '@const';
 import { Offer } from 'app/types/offer';
 import { OfferDetails } from 'app/types/offer-details';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { toggleFavoriteStatusAction } from '../../store/api-actions';
 
 type PlaceCardProps = {
   offer: Offer | OfferDetails;
@@ -20,6 +22,19 @@ export default function PlaceCard({
   } else if (offer.images.length > 0) {
     imageSrc = offer.images[0];
   }
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+
+
+  const handleFavoriteClick = () => {
+    if (authorizationStatus === AuthorizationStatus.NoAuth) {
+      navigate(AppRoute.Login);
+    } else {
+      dispatch(toggleFavoriteStatusAction({ id: offer.id, isFavorite: !offer.isFavorite }));
+    }
+  };
 
   return (
     <article
@@ -54,6 +69,7 @@ export default function PlaceCard({
               offer.isFavorite ? 'place-card__bookmark-button--active' : ''
             } button`}
             type="button"
+            onClick={handleFavoriteClick}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
