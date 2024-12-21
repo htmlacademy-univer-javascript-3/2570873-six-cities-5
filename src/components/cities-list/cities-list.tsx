@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { useAppDispatch } from '../../hooks/index';
 import { changeCity } from '../../store/action';
 
@@ -8,12 +9,12 @@ type CitiesListProps = {
   }[];
 };
 
-export default function CitiesList({ cities }: CitiesListProps): JSX.Element {
+const CitiesList = ({ cities }: CitiesListProps): JSX.Element =>{
   const dispatch = useAppDispatch();
 
-  const handleCityChange = (city: string) => {
+  const handleCityChange = useCallback((city: string) => {
     dispatch(changeCity(city));
-  };
+  }, [dispatch]);
 
   return (
     <ul className="locations__list tabs__list">
@@ -30,4 +31,6 @@ export default function CitiesList({ cities }: CitiesListProps): JSX.Element {
       ))}
     </ul>
   );
-}
+};
+
+export default memo(CitiesList);

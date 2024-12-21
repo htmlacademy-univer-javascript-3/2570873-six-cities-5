@@ -1,26 +1,60 @@
 import { SortOptions } from '@const';
-import { useCallback, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type SortOptionsProps = {
   onSortChange: (option: SortOptions) => void;
 };
 
-export default function SortingOptions({ onSortChange }: SortOptionsProps): JSX.Element {
+function SortingOptions({ onSortChange }: SortOptionsProps): JSX.Element {
   const [selectedOption, setSelectedOption] = useState(SortOptions.Popular);
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLFormElement | null>(null);
 
-  const handleSortChange = useCallback((option: SortOptions) => {
-    setSelectedOption(option);
-    onSortChange(option);
-    setIsOpen(false);
-  }, [onSortChange]);
+  const options = useMemo(() => Object.values(SortOptions), []);
+
+  const handleSortChange = useCallback(
+    (option: SortOptions) => {
+      setSelectedOption(option);
+      onSortChange(option);
+      setIsOpen(false);
+    },
+    [onSortChange]
+  );
 
   const toggleDropdown = useCallback(() => {
     setIsOpen((prevState) => !prevState);
   }, []);
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLLIElement>, option: SortOptions) => {
+      if (event.key === 'Enter') {
+        handleSortChange(option);
+      } else if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    },
+    [handleSortChange]
+  );
+
+  // Закрытие выпадающего списка при клике вне его
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('click', handleOutsideClick);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+    };
+  }, [isOpen]);
+
   return (
-    <form className="places__sorting" action="#" method="get">
+    <form ref={dropdownRef} className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>
       <span
         className="places__sorting-type"
@@ -33,12 +67,13 @@ export default function SortingOptions({ onSortChange }: SortOptionsProps): JSX.
         </svg>
       </span>
       <ul className={`places__options places__options--custom ${isOpen ? 'places__options--opened' : ''}`}>
-        {Object.values(SortOptions).map((option) => (
+        {options.map((option) => (
           <li
             key={option}
             className={`places__option ${option === selectedOption ? 'places__option--active' : ''}`}
             tabIndex={0}
             onClick={() => handleSortChange(option)}
+            onKeyDown={(event) => handleKeyDown(event, option)}
           >
             {option}
           </li>
@@ -47,3 +82,6 @@ export default function SortingOptions({ onSortChange }: SortOptionsProps): JSX.
     </form>
   );
 }
+
+const MemoizedSortingOptions = memo(SortingOptions);
+export default MemoizedSortingOptions;

@@ -1,6 +1,7 @@
 import { AppRoute, AuthorizationStatus } from '@const';
 import { Offer } from 'app/types/offer';
 import { OfferDetails } from 'app/types/offer-details';
+import { memo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { toggleFavoriteStatusAction } from '../../store/api-actions';
@@ -11,7 +12,7 @@ type PlaceCardProps = {
   onMouseLeave?: () => void;
 };
 
-export default function PlaceCard({
+function PlaceCard({
   offer,
   onMouseEnter = () => {},
   onMouseLeave = () => {},
@@ -28,13 +29,13 @@ export default function PlaceCard({
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = useCallback(() => {
     if (authorizationStatus === AuthorizationStatus.NoAuth) {
       navigate(AppRoute.Login);
     } else {
       dispatch(toggleFavoriteStatusAction({ id: offer.id, isFavorite: !offer.isFavorite }));
     }
-  };
+  }, [authorizationStatus, navigate, dispatch, offer.id, offer.isFavorite]);
 
   return (
     <article
@@ -95,3 +96,10 @@ export default function PlaceCard({
     </article>
   );
 }
+
+const MemoizedPlaceCard = memo(PlaceCard, (prevProps, nextProps) =>
+  prevProps.offer.id === nextProps.offer.id &&
+    prevProps.offer.isFavorite === nextProps.offer.isFavorite
+);
+
+export default MemoizedPlaceCard;

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { StatusCodes } from 'http-status-codes';
+import { toast } from 'react-toastify';
 import { getToken } from './token';
 
 type DetailMessageType = {
@@ -41,10 +42,11 @@ export const createAPI = (): AxiosInstance => {
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
       if (error.response && shouldDisplayError(error.response)) {
-        const detailMessage = (error.response.data);
-
-        // eslint-disable-next-line no-console
-        console.log(detailMessage);
+        const detailMessage = error.response.data;
+        if (detailMessage && typeof detailMessage.message === 'string') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+          toast.warn(detailMessage.message);
+        }
       }
 
       throw error;

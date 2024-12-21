@@ -1,9 +1,9 @@
-import { createReducer, createSelector } from '@reduxjs/toolkit';
+import { createReducer, createSelector, Draft } from '@reduxjs/toolkit';
 import { Offers } from '../../src/app/types/offer';
 import { OfferDetails } from '../../src/app/types/offer-details';
-import { Reviews } from '../../src/app/types/review';
+import { Review, Reviews } from '../../src/app/types/review';
 import { AuthorizationStatus, SortOptions } from '../const';
-import { changeCity, requireAuthorization, sendReview, setOfferDetails, setOfferInDetailsDataLoadingStatus, setOffersList, setSortOption, setUserEmail, updateOfferFavoriteStatus } from './action';
+import { changeCity, requireAuthorization, sendReview, setError, setOfferDetails, setOfferInDetailsDataLoadingStatus, setOffersList, setSortOption, setUserEmail, updateOfferFavoriteStatus } from './action';
 
 type StateType = {
   city: string;
@@ -48,13 +48,13 @@ export const reducer = createReducer(initialState, (builder) => {
       state.offersList = action.payload;
     })
     .addCase(sendReview, (state, {payload}) => {
-      state.selectedOffer.reviews.push(payload);
+      state.selectedOffer.reviews.push(payload as Draft<Review>);
     })
-    .addCase(setOfferDetails, (state, {payload}) => {
+    .addCase(setOfferDetails, (state, { payload }: { payload: { offerInfo: OfferDetails; nearestOffers: Offers; reviews: Reviews } }) => {
       state.selectedOffer = {
-        offerInfo: payload.offerInfo,
-        nearbyOffers: payload.nearestOffers,
-        reviews: payload.reviews
+        offerInfo: payload.offerInfo as Draft<OfferDetails>,
+        nearbyOffers: payload.nearestOffers as Draft<Offers>,
+        reviews: payload.reviews as Draft<Reviews>
       };
     })
     .addCase(setSortOption, (state, { payload }) => {
@@ -63,13 +63,13 @@ export const reducer = createReducer(initialState, (builder) => {
     .addCase(setUserEmail, (state, { payload }) => {
       state.userEmail = payload;
     })
-    .addCase(setOfferInDetailsDataLoadingStatus, (state, action) => {
+    .addCase(setOfferInDetailsDataLoadingStatus, (state, action: { payload: boolean }) => {
       state.isOfferInDetailsDataLoading = action.payload;
     })
     .addCase(requireAuthorization, (state, { payload }) => {
       state.authorizationStatus = payload;
     })
-    .addCase(updateOfferFavoriteStatus, (state, { payload }) => {
+    .addCase(updateOfferFavoriteStatus, (state, { payload }: { payload: { id: string; isFavorite: boolean } }) => {
       const { id, isFavorite } = payload;
 
       const updateFavoriteStatus = (offers: Offers) => {
@@ -83,6 +83,9 @@ export const reducer = createReducer(initialState, (builder) => {
       updateFavoriteStatus(state.selectedOffer.nearbyOffers);
 
       state.favoritesCount = state.offersList.filter((offer) => offer.isFavorite).length;
+    })
+    .addCase(setError, (state, action) => {
+      state.error = action.payload;
     });
 });
 
