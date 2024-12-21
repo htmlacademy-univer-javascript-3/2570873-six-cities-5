@@ -1,5 +1,5 @@
 import { AuthorizationStatus } from '@const';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ReviewSendingForm from '../../components/comment-form/comment-form';
 import Map from '../../components/map/map';
@@ -8,14 +8,14 @@ import ReviewsList from '../../components/review-list/review-list';
 import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { fetchOfferInDetailsAction, toggleFavoriteStatusAction } from '../../store/api-actions';
 
-export default function OfferPage(): JSX.Element {
+export const OfferPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const offers = useAppSelector((state) => state.offersList);
   const { offerInfo, nearbyOffers, reviews } = useAppSelector((state) => state.selectedOffer);
   const isOfferInDetailsDataLoading = useAppSelector((state) => state.isOfferInDetailsDataLoading);
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const mainOffer = offers.find((item) => item.id === id);
+  const mainOffer = useMemo(() => offers.find((item) => item.id === id), [id, offers]);
 
   useEffect(() => {
     // eslint-disable-next-line no-console
@@ -23,11 +23,11 @@ export default function OfferPage(): JSX.Element {
   }, [authorizationStatus]);
 
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = useCallback(() => {
     if (mainOffer) {
       dispatch(toggleFavoriteStatusAction({ id: mainOffer.id, isFavorite: !mainOffer.isFavorite }));
     }
-  };
+  }, [dispatch, mainOffer]);
 
   useEffect(() => {
     if (id) {
@@ -179,4 +179,4 @@ export default function OfferPage(): JSX.Element {
       </main>
     </div>
   );
-}
+};

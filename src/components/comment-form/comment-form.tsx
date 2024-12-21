@@ -1,5 +1,5 @@
 import { ReviewFormData } from 'app/types/review-data';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { sendReviewAction } from '../../store/api-actions';
@@ -16,67 +16,90 @@ export default function ReviewSendingForm(): JSX.Element {
 
   const [formData, setFormData] = useState<ReviewFormData>({
     review: '',
-    rating: 0
+    rating: 0,
   });
 
-  const handleFieldChange = (evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = evt.target;
-    setFormData({ ...formData, [name]: name === 'rating' ? Number(value) : value });
-  };
+  const isFormValid = useMemo(
+    () =>
+      formData.rating > 0 &&
+      formData.review.length >= MIN_REVIEW_LENGTH &&
+      formData.review.length <= MAX_REVIEW_LENGTH,
+    [formData]
+  );
 
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
+  const handleFieldChange = useCallback(
+    (evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = evt.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === 'rating' ? Number(value) : value,
+      }));
+    },
+    []
+  );
 
-    if (!id) {
-      return;
-    }
+  const handleSubmit = useCallback(
+    (evt: React.FormEvent<HTMLFormElement>) => {
+      evt.preventDefault();
 
-    const { review, rating } = formData;
+      if (!id || !isFormValid) {
+        return;
+      }
 
-    if (!rating || review.length < MIN_REVIEW_LENGTH || review.length > MAX_REVIEW_LENGTH) {
-      return;
-    }
+      setIsSubmitting(true);
 
-    setIsSubmitting(true);
+      dispatch(sendReviewAction({ review: formData, id }))
+        .unwrap()
+        .then(() => {
+          setFormData({ review: '', rating: 0 });
+          setErrorMessage(null);
+        })
+        .catch(() => setErrorMessage('Failed to submit review. Please try again.'))
+        .finally(() => setIsSubmitting(false));
+    },
+    [id, dispatch, formData, isFormValid]
+  );
 
-    dispatch(sendReviewAction({ review: { review: review, rating }, id }))
-      .unwrap()
-      .then(() => setFormData({ review: '', rating: 0 }))
-      .catch(() => setErrorMessage('Failed to submit review. Please try again.'))
-      .finally(() => setIsSubmitting(false));
-  };
-
-  function renderRatingInput(value: number, title: string) {
-    return (
-      <>
-        <input
-          className="form__rating-input visually-hidden"
-          disabled={isSubmitting}
-          checked={formData.rating === value}
-          onChange={handleFieldChange}
-          name="rating"
-          value={value}
-          id={`${value}-stars`}
-          type="radio"
-        />
-        <label htmlFor={`${value}-stars`} className="reviews__rating-label form__rating-label" title={title}>
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
-      </>
-    );
-  }
+  const ratingOptions = useMemo(
+    () => [
+      { value: 5, title: 'perfect' },
+      { value: 4, title: 'good' },
+      { value: 3, title: 'not bad' },
+      { value: 2, title: 'badly' },
+      { value: 1, title: 'terribly' },
+    ],
+    []
+  );
 
   return (
     <form className="reviews__form form" onSubmit={handleSubmit} action="#" method="post">
-      <label className="reviews__label form__label" htmlFor="review">Your review</label>
+      <label className="reviews__label form__label" htmlFor="review">
+        Your review
+      </label>
       <div className="reviews__rating-form form__rating">
-        {renderRatingInput(5, 'perfect')}
-        {renderRatingInput(4, 'good')}
-        {renderRatingInput(3, 'not bad')}
-        {renderRatingInput(2, 'badly')}
-        {renderRatingInput(1, 'terribly')}
+        {ratingOptions.map(({ value, title }) => (
+          <React.Fragment key={value}>
+            <input
+              className="form__rating-input visually-hidden"
+              disabled={isSubmitting}
+              checked={formData.rating === value}
+              onChange={handleFieldChange}
+              name="rating"
+              value={value}
+              id={`${value}-stars`}
+              type="radio"
+            />
+            <label
+              htmlFor={`${value}-stars`}
+              className="reviews__rating-label form__rating-label"
+              title={title}
+            >
+              <svg className="form__star-image" width="37" height="33">
+                <use xlinkHref="#icon-star"></use>
+              </svg>
+            </label>
+          </React.Fragment>
+        ))}
       </div>
       <textarea
         className="reviews__textarea form__textarea"
@@ -86,15 +109,18 @@ export default function ReviewSendingForm(): JSX.Element {
         id="review"
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
+        aria-required="true"
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
-          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">{MIN_REVIEW_LENGTH} characters</b>.
+          To submit review please make sure to set{' '}
+          <span className="reviews__star">rating</span> and describe your stay
+          with at least <b className="reviews__text-amount">{MIN_REVIEW_LENGTH} characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={isSubmitting || formData.review.length < MIN_REVIEW_LENGTH || formData.review.length > MAX_REVIEW_LENGTH || !formData.rating}
+          disabled={isSubmitting || !isFormValid}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>

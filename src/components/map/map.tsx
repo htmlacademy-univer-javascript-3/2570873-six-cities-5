@@ -1,7 +1,7 @@
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '@const';
 import { Icon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { City } from '../../app/types/city';
 import { Offer, Offers } from '../../app/types/offer';
 import useMap from '../../hooks/use-map';
@@ -29,15 +29,17 @@ function Map(props: MapProps): JSX.Element {
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
+  const markerLayer = useMemo(() => layerGroup(), []);
 
   useEffect(() => {
     if (map) {
+      markerLayer.clearLayers();
       // Центрируем карту на текущем городе
       map.setView(
         [city.location.latitude, city.location.longitude],
         city.location.zoom
       );
-      const markerLayer = layerGroup().addTo(map);
+      markerLayer.addTo(map);
       offers.forEach((offer) => {
         const marker = new Marker({
           lat: offer.location.latitude,
@@ -49,11 +51,12 @@ function Map(props: MapProps): JSX.Element {
         );
         marker.addTo(markerLayer);
       });
+      markerLayer.addTo(map);
       return () => {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, city, offers, selectedOffer]);
+  }, [map, city, offers, selectedOffer, markerLayer]);
 
   return (
     <div
@@ -65,4 +68,9 @@ function Map(props: MapProps): JSX.Element {
   );
 }
 
-export default Map;
+const MemoizedMap = memo(Map, (prevProps, nextProps) =>
+  prevProps.selectedOffer?.id === nextProps.selectedOffer?.id &&
+    prevProps.offers.map((offer) => offer.id).join() === nextProps.offers.map((offer) => offer.id).join()
+);
+
+export default MemoizedMap;

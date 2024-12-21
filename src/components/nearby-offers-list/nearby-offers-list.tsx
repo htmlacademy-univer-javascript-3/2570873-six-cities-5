@@ -1,11 +1,12 @@
 import PlaceCard from '@components/place-card/place-card';
+import { memo } from 'react';
 import { Offers } from '../../app/types/offer';
 
 type NearbyOffersListProps = {
   offers: Offers | undefined;
 };
 
-export default function NearbyOffersList({
+function NearbyOffersList({
   offers,
 }: NearbyOffersListProps): JSX.Element {
   return (
@@ -30,3 +31,7 @@ export default function NearbyOffersList({
     </section>
   );
 }
+
+const MemoizedNearbyOffersList = memo(NearbyOffersList);
+export default MemoizedNearbyOffersList;
+

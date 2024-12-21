@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import CitiesList from '../../components/cities-list/cities-list';
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
@@ -13,13 +13,13 @@ const MainPage: React.FC = () => {
   const currentCityOffers = useAppSelector(selectFilteredAndSortedOffers);
   const city = useAppSelector((state) => state.city);
   const [activeOffer, setActiveOffer] = useState<string | number | null>(null);
-  const selectedOffer = currentCityOffers.find((offer) => offer.id === activeOffer);
+  const selectedOffer = useMemo(() => currentCityOffers.find((offer) => offer.id === activeOffer), [activeOffer, currentCityOffers]);
 
   const dispatch = useAppDispatch();
 
-  const handleSortChange = (option: SortOptions) => {
+  const handleSortChange = useCallback((option: SortOptions) => {
     dispatch(setSortOption(option));
-  };
+  }, [dispatch]);
 
   return (
     <div className="page page--gray page--main">

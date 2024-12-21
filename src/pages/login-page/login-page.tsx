@@ -6,7 +6,7 @@ import LoginForm from '../../components/login-form/login-form';
 import { useAppSelector } from '../../hooks';
 
 
-export default function LoginPage(): JSX.Element {
+export const LoginPage = (): JSX.Element => {
   const navigate = useNavigate();
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
@@ -36,5 +36,5 @@ export default function LoginPage(): JSX.Element {
       </main>
     </div>
   );
-}
+};
 
