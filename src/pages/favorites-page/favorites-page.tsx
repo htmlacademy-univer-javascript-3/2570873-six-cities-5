@@ -3,15 +3,22 @@ import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import OffersList from '../../components/offers-list/offers-list';
 import { useAppSelector } from '../../hooks/index';
+import { getOffers } from '../../store/offers-data/selectors';
 
 const FavoritesPage: React.FC = () => {
   const [, setActiveOfferId] = useState<string | number | null>(null);
-  const offers = useAppSelector((state) => state.offersList);
-  const favoriteOffers = useMemo(() => offers.filter((offer) => offer.isFavorite), [offers]);
+  const offers = useAppSelector(getOffers);
+  const favoriteOffers = useMemo(
+    () => offers.filter((offer) => offer.isFavorite),
+    [offers]
+  );
 
-  const handleActiveOfferChange = useCallback((offerId: string | number | null) => {
-    setActiveOfferId(offerId);
-  }, []);
+  const handleActiveOfferChange = useCallback(
+    (offerId: string | number | null) => {
+      setActiveOfferId(offerId);
+    },
+    []
+  );
   return (
     <div className="page">
       <Header />

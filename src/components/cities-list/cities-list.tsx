@@ -1,30 +1,35 @@
-import { memo, useCallback } from 'react';
+import { Cities } from '@const';
+import { City } from 'app/types/city';
+import { memo, useCallback, useState } from 'react';
 import { useAppDispatch } from '../../hooks/index';
-import { changeCity } from '../../store/action';
+import { changeCity } from '../../store/app-data/app-data';
 
-type CitiesListProps = {
-  cities: {
-    name: string;
-    id: number;
-  }[];
-};
-
-const CitiesList = ({ cities }: CitiesListProps): JSX.Element =>{
+const CitiesList = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const [activeCity, setActiveCity] = useState<City>(Cities[0]);
 
-  const handleCityChange = useCallback((city: string) => {
-    dispatch(changeCity(city));
-  }, [dispatch]);
+  const handleCityChange = useCallback(
+    (city: City) => {
+      setActiveCity(city);
+      dispatch(changeCity(city));
+    },
+    [dispatch]
+  );
 
   return (
     <ul className="locations__list tabs__list">
-      {cities.map((city) => (
+      {Cities.map((city) => (
         <li
-          key={city.id}
+          key={city.name}
           className="locations__item"
-          onClick={() => handleCityChange(city.name)}
+          onClick={() => handleCityChange(city)}
         >
-          <a className="locations__item-link tabs__item" href="#">
+          <a
+            className={`locations__item-link tabs__item ${
+              activeCity?.name === city.name ? 'tabs__item--active' : ''
+            }`}
+            href="#"
+          >
             <span>{city.name}</span>
           </a>
         </li>
@@ -33,4 +38,5 @@ const CitiesList = ({ cities }: CitiesListProps): JSX.Element =>{
   );
 };
 
-export default memo(CitiesList);
+const MemoizedCitiesList = memo(CitiesList);
+export default MemoizedCitiesList;
