@@ -1,33 +1,53 @@
-import { AuthorizationStatus } from '@const';
+import { AppRoute, AuthorizationStatus } from '@const';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReviewSendingForm from '../../components/comment-form/comment-form';
 import Map from '../../components/map/map';
 import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
 import ReviewsList from '../../components/review-list/review-list';
 import { useAppDispatch, useAppSelector } from '../../hooks/index';
-import { fetchOfferInDetailsAction, toggleFavoriteStatusAction } from '../../store/api-actions';
+import {
+  fetchOfferInDetailsAction,
+  updateFavoriteStatusAction,
+} from '../../store/api-actions';
+import {
+  getNearbyOffers,
+  getOfferInDetails,
+  getOfferInDetailsDataLoadingStatus,
+  getReviews,
+} from '../../store/current-offer-data.ts/selectors';
+import { getOffers } from '../../store/offers-data/selectors';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
 
 export const OfferPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const offers = useAppSelector((state) => state.offersList);
-  const { offerInfo, nearbyOffers, reviews } = useAppSelector((state) => state.selectedOffer);
-  const isOfferInDetailsDataLoading = useAppSelector((state) => state.isOfferInDetailsDataLoading);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const mainOffer = useMemo(() => offers.find((item) => item.id === id), [id, offers]);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('Current Authorization Status:', authorizationStatus);
-  }, [authorizationStatus]);
-
+  const offers = useAppSelector(getOffers);
+  const offerInfo = useAppSelector(getOfferInDetails);
+  const nearbyOffers = useAppSelector(getNearbyOffers);
+  const reviews = useAppSelector(getReviews);
+  const isOfferInDetailsDataLoading = useAppSelector(
+    getOfferInDetailsDataLoadingStatus
+  );
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const mainOffer = useMemo(
+    () => offers.find((item) => item.id === id),
+    [id, offers]
+  );
 
   const handleFavoriteClick = useCallback(() => {
-    if (mainOffer) {
-      dispatch(toggleFavoriteStatusAction({ id: mainOffer.id, isFavorite: !mainOffer.isFavorite }));
+    if (authorizationStatus === AuthorizationStatus.NoAuth) {
+      navigate(AppRoute.Login);
+    } else if (mainOffer) {
+      dispatch(
+        updateFavoriteStatusAction({
+          id: mainOffer.id,
+          isFavorite: !mainOffer.isFavorite,
+        })
+      );
     }
-  }, [dispatch, mainOffer]);
+  }, [authorizationStatus, navigate, dispatch, mainOffer]);
 
   useEffect(() => {
     if (id) {
@@ -88,7 +108,13 @@ export const OfferPage = (): JSX.Element => {
               )}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{mainOffer.title}</h1>
-                <button className={`offer__bookmark-button ${mainOffer.isFavorite && 'offer__bookmark-button--active'} button`} onClick={handleFavoriteClick} type="button">
+                <button
+                  className={`offer__bookmark-button ${
+                    mainOffer.isFavorite && 'offer__bookmark-button--active'
+                  } button`}
+                  onClick={handleFavoriteClick}
+                  type="button"
+                >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
@@ -135,7 +161,11 @@ export const OfferPage = (): JSX.Element => {
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className={`offer__avatar-wrapper ${offerInfo.host.isPro && 'offer__avatar-wrapper--pro'} user__avatar-wrapper`}>
+                  <div
+                    className={`offer__avatar-wrapper ${
+                      offerInfo.host.isPro && 'offer__avatar-wrapper--pro'
+                    } user__avatar-wrapper`}
+                  >
                     <img
                       className="offer__avatar user__avatar"
                       src={offerInfo.host.avatarUrl}
@@ -144,7 +174,9 @@ export const OfferPage = (): JSX.Element => {
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">{offerInfo.host.name}</span>
+                  <span className="offer__user-name">
+                    {offerInfo.host.name}
+                  </span>
                   {offerInfo.host.isPro && (
                     <span className="offer__user-status">Pro</span>
                   )}
@@ -161,7 +193,9 @@ export const OfferPage = (): JSX.Element => {
                   </span>
                 </h2>
                 <ReviewsList reviews={reviews} />
-                {authorizationStatus === AuthorizationStatus.Auth && <ReviewSendingForm />}
+                {authorizationStatus === AuthorizationStatus.Auth && (
+                  <ReviewSendingForm />
+                )}
               </section>
             </div>
           </div>

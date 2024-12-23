@@ -2,7 +2,7 @@ import { ReviewFormData } from 'app/types/review-data';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
-import { sendReviewAction } from '../../store/api-actions';
+import { submitReviewAction } from '../../store/api-actions';
 
 const MIN_REVIEW_LENGTH = 50;
 const MAX_REVIEW_LENGTH = 300;
@@ -48,13 +48,15 @@ export default function ReviewSendingForm(): JSX.Element {
 
       setIsSubmitting(true);
 
-      dispatch(sendReviewAction({ review: formData, id }))
+      dispatch(submitReviewAction({ review: formData, id }))
         .unwrap()
         .then(() => {
           setFormData({ review: '', rating: 0 });
           setErrorMessage(null);
         })
-        .catch(() => setErrorMessage('Failed to submit review. Please try again.'))
+        .catch(() =>
+          setErrorMessage('Failed to submit review. Please try again.')
+        )
         .finally(() => setIsSubmitting(false));
     },
     [id, dispatch, formData, isFormValid]
@@ -72,7 +74,12 @@ export default function ReviewSendingForm(): JSX.Element {
   );
 
   return (
-    <form className="reviews__form form" onSubmit={handleSubmit} action="#" method="post">
+    <form
+      className="reviews__form form"
+      onSubmit={handleSubmit}
+      action="#"
+      method="post"
+    >
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -115,7 +122,9 @@ export default function ReviewSendingForm(): JSX.Element {
         <p className="reviews__help">
           To submit review please make sure to set{' '}
           <span className="reviews__star">rating</span> and describe your stay
-          with at least <b className="reviews__text-amount">{MIN_REVIEW_LENGTH} characters</b>.
+          with at least{' '}
+          <b className="reviews__text-amount">{MIN_REVIEW_LENGTH} characters</b>
+          .
         </p>
         <button
           className="reviews__submit form__submit button"

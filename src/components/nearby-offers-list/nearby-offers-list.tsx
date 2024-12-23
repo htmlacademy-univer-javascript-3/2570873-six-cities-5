@@ -1,4 +1,5 @@
 import PlaceCard from '@components/place-card/place-card';
+import { CardType } from '@const';
 import { memo } from 'react';
 import { Offers } from '../../app/types/offer';
 
@@ -6,9 +7,7 @@ type NearbyOffersListProps = {
   offers: Offers | undefined;
 };
 
-function NearbyOffersList({
-  offers,
-}: NearbyOffersListProps): JSX.Element {
+function NearbyOffersList({ offers }: NearbyOffersListProps): JSX.Element {
   return (
     <section className="near-places places">
       <h2 className="near-places__title">Other places in the neighbourhood</h2>
@@ -20,6 +19,7 @@ function NearbyOffersList({
               offer={offer}
               onMouseEnter={() => {}}
               onMouseLeave={() => {}}
+              cardType={CardType.Nearest}
             />
           ))
         ) : (
@@ -34,4 +34,3 @@ function NearbyOffersList({
 
 const MemoizedNearbyOffersList = memo(NearbyOffersList);
 export default MemoizedNearbyOffersList;
-

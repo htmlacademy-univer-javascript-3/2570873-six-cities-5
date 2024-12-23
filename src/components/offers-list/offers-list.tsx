@@ -1,10 +1,11 @@
 import PlaceCard from '@components/place-card/place-card';
+import { CardType } from '@const';
 import { Offer } from 'app/types/offer';
 import { OfferDetails } from 'app/types/offer-details';
 import { memo, useCallback, useEffect, useState } from 'react';
 
 type OffersListProps = {
-  offers: Offer[] | OfferDetails[];
+  offers: Offer[];
   onActiveOfferChange: (offerId: string | number | null) => void;
 };
 
@@ -36,6 +37,7 @@ function OffersList({
           offer={offer}
           onMouseEnter={() => handleMouseEnter(offer)}
           onMouseLeave={handleMouseLeave}
+          cardType={CardType.Regular}
         />
       ))}
     </div>
@@ -44,4 +46,3 @@ function OffersList({
 
 const MemoizedOffersList = memo(OffersList);
 export default MemoizedOffersList;
-

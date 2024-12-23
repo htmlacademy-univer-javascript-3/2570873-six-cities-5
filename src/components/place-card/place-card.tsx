@@ -1,45 +1,50 @@
-import { AppRoute, AuthorizationStatus } from '@const';
+import {
+  AppRoute,
+  AuthorizationStatus,
+  CardImageWrapperClass,
+  CardType,
+} from '@const';
 import { Offer } from 'app/types/offer';
-import { OfferDetails } from 'app/types/offer-details';
 import { memo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { toggleFavoriteStatusAction } from '../../store/api-actions';
+import { updateFavoriteStatusAction } from '../../store/api-actions';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
 
 type PlaceCardProps = {
-  offer: Offer | OfferDetails;
+  offer: Offer;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  cardType: CardType;
 };
 
 function PlaceCard({
   offer,
   onMouseEnter = () => {},
   onMouseLeave = () => {},
+  cardType,
 }: PlaceCardProps): JSX.Element {
-  let imageSrc = '';
-  if ('previewImage' in offer) {
-    imageSrc = offer.previewImage;
-  } else if (offer.images.length > 0) {
-    imageSrc = offer.images[0];
-  }
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   const handleFavoriteClick = useCallback(() => {
     if (authorizationStatus === AuthorizationStatus.NoAuth) {
       navigate(AppRoute.Login);
     } else {
-      dispatch(toggleFavoriteStatusAction({ id: offer.id, isFavorite: !offer.isFavorite }));
+      dispatch(
+        updateFavoriteStatusAction({
+          id: offer.id,
+          isFavorite: !offer.isFavorite,
+        })
+      );
     }
   }, [authorizationStatus, navigate, dispatch, offer.id, offer.isFavorite]);
 
   return (
     <article
-      className="cities__card place-card"
+      className={`${cardType} place-card`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -48,18 +53,24 @@ function PlaceCard({
           <span>Premium</span>
         </div>
       )}
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div
+        className={`${CardImageWrapperClass[cardType]} place-card__image-wrapper`}
+      >
         <Link to={`${AppRoute.Offer}/${offer.id}`}>
           <img
             className="place-card__image"
-            src={imageSrc}
-            width="260"
-            height="200"
+            src={offer.previewImage}
+            width={cardType === CardType.Favorites ? 150 : 260}
+            height={cardType === CardType.Favorites ? 110 : 200}
             alt="Place image"
           />
         </Link>
       </div>
-      <div className="place-card__info">
+      <div
+        className={`${
+          cardType === CardType.Favorites ? 'favorites__card-info' : ''
+        } place-card__info`}
+      >
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{offer.price}</b>
@@ -97,8 +108,10 @@ function PlaceCard({
   );
 }
 
-const MemoizedPlaceCard = memo(PlaceCard, (prevProps, nextProps) =>
-  prevProps.offer.id === nextProps.offer.id &&
+const MemoizedPlaceCard = memo(
+  PlaceCard,
+  (prevProps, nextProps) =>
+    prevProps.offer.id === nextProps.offer.id &&
     prevProps.offer.isFavorite === nextProps.offer.isFavorite
 );
 

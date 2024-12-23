@@ -1,14 +1,14 @@
 import { AppRoute, AuthorizationStatus } from '@const';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../components/header/header';
 import LoginForm from '../../components/login-form/login-form';
 import { useAppSelector } from '../../hooks';
-
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
 
 export const LoginPage = (): JSX.Element => {
   const navigate = useNavigate();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   useEffect(() => {
     if (authorizationStatus === AuthorizationStatus.Auth) {
@@ -27,9 +27,9 @@ export const LoginPage = (): JSX.Element => {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
+              <Link className="locations__item-link" to={AppRoute.Root}>
                 <span>Amsterdam</span>
-              </a>
+              </Link>
             </div>
           </section>
         </div>
@@ -37,4 +37,3 @@ export const LoginPage = (): JSX.Element => {
     </div>
   );
 };
-

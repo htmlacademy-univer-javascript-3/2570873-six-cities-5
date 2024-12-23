@@ -1,25 +1,43 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import CitiesList from '../../components/cities-list/cities-list';
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import SortingOptions from '../../components/sorting-options/sorting-options';
-import { Cities, SortOptions } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../hooks/index';
-import { setSortOption } from '../../store/action';
-import { selectFilteredAndSortedOffers } from '../../store/reducer';
+import { SortOptions } from '../../const';
+import { useAppSelector } from '../../hooks/index';
+import { getCity, getSortType } from '../../store/app-data/selectors';
+import { getOffers } from '../../store/offers-data/selectors';
 
 const MainPage: React.FC = () => {
-  const currentCityOffers = useAppSelector(selectFilteredAndSortedOffers);
-  const city = useAppSelector((state) => state.city);
+  const offers = useAppSelector(getOffers);
+  const city = useAppSelector(getCity);
+  const sortType = useAppSelector(getSortType);
+
   const [activeOffer, setActiveOffer] = useState<string | number | null>(null);
-  const selectedOffer = useMemo(() => currentCityOffers.find((offer) => offer.id === activeOffer), [activeOffer, currentCityOffers]);
+  const selectedOffer = useMemo(
+    () => offers.find((offer) => offer.id === activeOffer),
+    [activeOffer, offers]
+  );
 
-  const dispatch = useAppDispatch();
+  const currentCityOffers = useMemo(() => {
+    const filteredOffers = offers.filter(
+      (offer) => offer.city.name === city.name
+    );
 
-  const handleSortChange = useCallback((option: SortOptions) => {
-    dispatch(setSortOption(option));
-  }, [dispatch]);
+    return [...filteredOffers].sort((a, b) => {
+      switch (sortType) {
+        case SortOptions.PriceLowToHigh:
+          return a.price - b.price;
+        case SortOptions.PriceHighToLow:
+          return b.price - a.price;
+        case SortOptions.TopRated:
+          return b.rating - a.rating;
+        default:
+          return 0;
+      }
+    });
+  }, [city, offers, sortType]);
 
   return (
     <div className="page page--gray page--main">
@@ -28,7 +46,7 @@ const MainPage: React.FC = () => {
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
-            <CitiesList cities={Cities} />
+            <CitiesList />
           </section>
         </div>
         <div className="cities">
@@ -36,9 +54,9 @@ const MainPage: React.FC = () => {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {currentCityOffers.length} places to stay in {city}
+                {currentCityOffers.length} places to stay in {city.name}
               </b>
-              <SortingOptions onSortChange={handleSortChange} />
+              <SortingOptions />
               <OffersList
                 offers={currentCityOffers}
                 onActiveOfferChange={setActiveOffer}
@@ -46,9 +64,11 @@ const MainPage: React.FC = () => {
             </section>
             <div className="cities__right-section">
               <Map
-                city={currentCityOffers[0]?.city || {
-                  location: { latitude: 0, longitude: 0, zoom: 10 },
-                }}
+                city={
+                  currentCityOffers[0]?.city || {
+                    location: { latitude: 0, longitude: 0, zoom: 10 },
+                  }
+                }
                 offers={currentCityOffers}
                 selectedOffer={selectedOffer}
               />
