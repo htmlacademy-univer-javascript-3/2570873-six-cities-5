@@ -1,6 +1,6 @@
 import { NameSpace } from '@const';
-import { Offer } from '../../app/types/offer';
-import { State } from '../../app/types/state';
+import { Offer } from 'types/offer';
+import { State } from 'types/state';
 
 export const getOffers = (state: State): Offer[] =>
   state[NameSpace.Offers].offers;

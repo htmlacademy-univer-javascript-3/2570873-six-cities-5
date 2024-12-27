@@ -1,12 +1,7 @@
-import {
-  AppRoute,
-  AuthorizationStatus,
-  CardImageWrapperClass,
-  CardType,
-} from '@const';
-import { Offer } from 'app/types/offer';
+import { AppRoute, AuthorizationStatus, CardImageWrapperClass, CardType } from '@const';
 import { memo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Offer } from 'types/offer';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { updateFavoriteStatusAction } from '../../store/api-actions';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';

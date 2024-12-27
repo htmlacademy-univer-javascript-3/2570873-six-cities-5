@@ -1,8 +1,8 @@
-import PlaceCard from '@components/place-card/place-card';
 import { CardType } from '@const';
 import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Offers } from '../../app/types/offer';
+import { Offers } from 'types/offer';
+import PlaceCard from '../../components/place-card/place-card';
 
 interface FavoritesListProps {
   cities: string[];
@@ -46,4 +46,3 @@ function FavoritesList({ cities, favorites }: FavoritesListProps): JSX.Element {
 
 const MemoizedFavoritesList = memo(FavoritesList);
 export default MemoizedFavoritesList;
-

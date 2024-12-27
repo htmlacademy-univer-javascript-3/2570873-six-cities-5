@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logoutAction } from '../../store/api-actions';
 import { getOffers } from '../../store/offers-data/selectors';
-import {
-  getAuthorizationStatus,
-  getAvatarUrl,
-  getUserEmail,
-} from '../../store/user-process/selectors';
+import { getAuthorizationStatus, getAvatarUrl, getUserEmail } from '../../store/user-process/selectors';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();

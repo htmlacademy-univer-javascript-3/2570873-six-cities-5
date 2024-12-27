@@ -1,6 +1,6 @@
 import { Cities } from '@const';
-import { City } from 'app/types/city';
 import { memo, useCallback, useState } from 'react';
+import { City } from 'types/city';
 import { useAppDispatch } from '../../hooks/index';
 import { changeCity } from '../../store/app-data/app-data';
 

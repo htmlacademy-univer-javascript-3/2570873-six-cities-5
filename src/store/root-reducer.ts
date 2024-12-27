@@ -1,5 +1,5 @@
+import { NameSpace } from '@const';
 import { combineReducers } from '@reduxjs/toolkit';
-import { NameSpace } from '../const.ts';
 import { appData } from './app-data/app-data';
 import { currentOfferData } from './current-offer-data.ts/current-offer-data.ts';
 import { offersData } from './offers-data/offers-data.ts';

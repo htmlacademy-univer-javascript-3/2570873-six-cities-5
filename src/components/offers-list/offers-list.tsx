@@ -1,8 +1,8 @@
 import PlaceCard from '@components/place-card/place-card';
 import { CardType } from '@const';
-import { Offer } from 'app/types/offer';
-import { OfferDetails } from 'app/types/offer-details';
 import { memo, useCallback, useEffect, useState } from 'react';
+import { Offer } from 'types/offer';
+import { OfferDetails } from 'types/offer-details';
 
 type OffersListProps = {
   offers: Offer[];

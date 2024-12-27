@@ -6,16 +6,8 @@ import Map from '../../components/map/map';
 import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
 import ReviewsList from '../../components/review-list/review-list';
 import { useAppDispatch, useAppSelector } from '../../hooks/index';
-import {
-  fetchOfferInDetailsAction,
-  updateFavoriteStatusAction,
-} from '../../store/api-actions';
-import {
-  getNearbyOffers,
-  getOfferInDetails,
-  getOfferInDetailsDataLoadingStatus,
-  getReviews,
-} from '../../store/current-offer-data.ts/selectors';
+import { fetchOfferInDetailsAction, updateFavoriteStatusAction } from '../../store/api-actions';
+import { getNearbyOffers, getOfferInDetails, getOfferInDetailsDataLoadingStatus, getReviews } from '../../store/current-offer-data.ts/selectors';
 import { getOffers } from '../../store/offers-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 
