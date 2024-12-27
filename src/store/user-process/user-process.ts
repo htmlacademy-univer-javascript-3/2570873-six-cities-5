@@ -1,6 +1,6 @@
 import { AuthorizationStatus, NameSpace } from '@const';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserProcess } from '../../app/types/state';
+import { UserProcess } from 'types/state';
 
 const initialState: UserProcess = {
   authorizationStatus: AuthorizationStatus.NoAuth,

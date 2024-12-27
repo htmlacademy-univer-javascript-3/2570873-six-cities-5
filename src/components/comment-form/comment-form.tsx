@@ -1,7 +1,7 @@
-import { ReviewFormData } from 'app/types/review-data';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks';
+import { ReviewFormData } from 'types/review-data';
+import { useAppDispatch } from '../../hooks/index';
 import { submitReviewAction } from '../../store/api-actions';
 
 const MIN_REVIEW_LENGTH = 50;

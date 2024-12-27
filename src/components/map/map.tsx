@@ -2,8 +2,8 @@ import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '@const';
 import { Icon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { memo, useEffect, useMemo, useRef } from 'react';
-import { City } from '../../app/types/city';
-import { Offer, Offers } from '../../app/types/offer';
+import { City } from 'types/city';
+import { Offer, Offers } from 'types/offer';
 import useMap from '../../hooks/use-map';
 
 type MapProps = {
@@ -68,9 +68,12 @@ function Map(props: MapProps): JSX.Element {
   );
 }
 
-const MemoizedMap = memo(Map, (prevProps, nextProps) =>
-  prevProps.selectedOffer?.id === nextProps.selectedOffer?.id &&
-    prevProps.offers.map((offer) => offer.id).join() === nextProps.offers.map((offer) => offer.id).join()
+const MemoizedMap = memo(
+  Map,
+  (prevProps, nextProps) =>
+    prevProps.selectedOffer?.id === nextProps.selectedOffer?.id &&
+    prevProps.offers.map((offer) => offer.id).join() ===
+      nextProps.offers.map((offer) => offer.id).join()
 );
 
 export default MemoizedMap;

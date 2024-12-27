@@ -1,10 +1,11 @@
-import ReviewItem from '@components/review-item/review-item';
+
 import { useMemo } from 'react';
-import { Reviews } from '../../app/types/review';
+import { Reviews } from 'types/review';
+import ReviewItem from '../../components/review-item/review-item';
 import './review-list.scss';
 
 type ReviewsListProps = {
-    reviews?: Reviews;
+  reviews?: Reviews;
 };
 
 export default function ReviewsList({
@@ -13,9 +14,7 @@ export default function ReviewsList({
   const sortedReviews = useMemo(
     () =>
       reviews
-        ? [...reviews]
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-          .slice(0, 10)
+        ? [...reviews].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10)
         : [],
     [reviews]
   );

@@ -1,13 +1,13 @@
 import { APIRoute, AuthorizationStatus } from '@const';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { OfferDetails } from 'app/types/offer-details';
-import { Review, Reviews } from 'app/types/review';
-import { ReviewFormData } from 'app/types/review-data';
 import { AxiosInstance } from 'axios';
-import { AuthData } from '../app/types/auth-data';
-import { Offer, Offers } from '../app/types/offer';
-import { AppDispatch, State } from '../app/types/state';
-import { User } from '../app/types/user';
+import { AuthData } from 'types/auth-data';
+import { Offer, Offers } from 'types/offer';
+import { OfferDetails } from 'types/offer-details';
+import { Review, Reviews } from 'types/review';
+import { ReviewFormData } from 'types/review-data';
+import { AppDispatch, State } from 'types/state';
+import { User } from 'types/user';
 import { dropToken, saveToken } from '../services/token';
 import {
   loadOfferInDetails,

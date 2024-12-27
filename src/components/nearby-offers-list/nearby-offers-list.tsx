@@ -1,7 +1,7 @@
 import PlaceCard from '@components/place-card/place-card';
 import { CardType } from '@const';
 import { memo } from 'react';
-import { Offers } from '../../app/types/offer';
+import { Offers } from 'types/offer';
 
 type NearbyOffersListProps = {
   offers: Offers | undefined;

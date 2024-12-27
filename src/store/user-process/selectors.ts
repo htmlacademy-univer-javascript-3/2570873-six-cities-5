@@ -1,5 +1,5 @@
 import { AuthorizationStatus, NameSpace } from '@const';
-import { State } from '../../app/types/state';
+import { State } from 'types/state';
 
 export const getAuthorizationStatus = (state: State): AuthorizationStatus =>
   state[NameSpace.User].authorizationStatus;

@@ -1,7 +1,7 @@
 import { NameSpace } from '@const';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Offers } from '../../app/types/offer';
-import { OffersData } from '../../app/types/state';
+import { Offers } from 'types/offer';
+import { OffersData } from 'types/state';
 
 const initialState: OffersData = {
   offers: [],

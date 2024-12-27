@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { City } from '../../app/types/city.ts';
-import { AppData } from '../../app/types/state.ts';
+import { City } from 'types/city.ts';
+import { AppData } from 'types/state.ts';
 import { Cities, NameSpace, SortOptions } from '../../const.ts';
 
 const initialState: AppData = {

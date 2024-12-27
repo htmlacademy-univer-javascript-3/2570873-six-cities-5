@@ -1,9 +1,9 @@
 import { NameSpace } from '@const';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Offers } from '../../app/types/offer';
-import { OfferDetails } from '../../app/types/offer-details';
-import { Review, Reviews } from '../../app/types/review';
-import { CurrentOfferData } from '../../app/types/state';
+import { Offers } from 'types/offer';
+import { OfferDetails } from 'types/offer-details';
+import { Review, Reviews } from 'types/review';
+import { CurrentOfferData } from 'types/state';
 
 const initialState: CurrentOfferData = {
   offerInfo: null,
