@@ -1,5 +1,5 @@
-import { mockNearbyOffers, mockNewReview, mockOfferInfo, mockReviews } from '@mocks/mocks';
 import { describe, expect, it } from 'vitest';
+import { makeFakeNearbyOffers, makeFakeOfferDetails, makeFakeReview, makeFakeReviews } from '../../mocks/mocks';
 import { currentOfferData, loadOfferInDetails, sendReview, setOfferInDetailsDataLoadingStatus } from './current-offer-data';
 
 const initialOfferState = {
@@ -17,26 +17,26 @@ describe('Reducer: currentOfferData', () => {
 
   it('should load offer details, nearby offers, and reviews', () => {
     const action = loadOfferInDetails({
-      offerInfo: mockOfferInfo,
-      nearestOffers: mockNearbyOffers,
-      reviews: mockReviews,
+      offerInfo: makeFakeOfferDetails(),
+      nearestOffers: makeFakeNearbyOffers(3),
+      reviews: makeFakeReviews(5),
     });
     const result = currentOfferData.reducer(initialOfferState, action);
 
-    expect(result.offerInfo).toEqual(mockOfferInfo);
-    expect(result.nearbyOffers).toEqual(mockNearbyOffers);
-    expect(result.reviews).toEqual(mockReviews);
+    expect(result.offerInfo).toEqual(action.payload.offerInfo);
+    expect(result.nearbyOffers).toEqual(action.payload.nearestOffers);
+    expect(result.reviews).toEqual(action.payload.reviews);
   });
 
   it('should add a new review', () => {
-    const action = sendReview(mockNewReview);
+    const action = sendReview(makeFakeReview());
     const result = currentOfferData.reducer(
-      { ...initialOfferState, reviews: mockReviews },
+      { ...initialOfferState, reviews: makeFakeReviews(5) },
       action
     );
 
-    expect(result.reviews).toContain(mockNewReview);
-    expect(result.reviews.length).toBe(mockReviews.length + 1);
+    expect(result.reviews).toContain(action.payload);
+    expect(result.reviews.length).toBe(6);
   });
 
   it('should set loading status to true', () => {

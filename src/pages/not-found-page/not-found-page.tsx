@@ -1,6 +1,6 @@
+import Header from '@components/header/header';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../../components/header/header';
 
 const NotFoundPage: React.FC = () => (
   <div className="page page--gray page--not-found">

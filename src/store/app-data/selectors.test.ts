@@ -1,29 +1,23 @@
-import { Cities, SortOptions } from '@const';
 import { State } from 'types/state';
 import { describe, expect, it } from 'vitest';
-import { mockAppState, mockCurrentOfferState, mockOffersState, mockUserState } from '../../mocks/state-mocks';
+import { makeFakeState } from '../../mocks/mocks';
 import { getCity, getError, getSortType } from './selectors';
 
 describe('Selectors: appData', () => {
-  const state: State = {
-    APP: mockAppState,
-    USER: mockUserState,
-    CURRENT_OFFER: mockCurrentOfferState,
-    OFFERS: mockOffersState,
-  };
+  const state: State = makeFakeState();
 
   it('should return the current city', () => {
-    expect(getCity(state)).toBe(Cities[2]);
+    expect(getCity(state)).toBe(state.APP.city);
   });
 
   it('should return the current sortType', () => {
-    expect(getSortType(state)).toBe(SortOptions.PriceHighToLow);
+    expect(getSortType(state)).toBe(state.APP.SortOptions);
   });
 
   it('should return the error message if present', () => {
     const stateWithError = {
       ...state,
-      APP: { ...mockAppState, error: 'Test error' },
+      APP: { ...state.APP, error: 'Test error' },
     };
     expect(getError(stateWithError)).toBe('Test error');
   });
@@ -31,7 +25,7 @@ describe('Selectors: appData', () => {
   it('should return null if there is no error', () => {
     const stateWithoutError = {
       ...state,
-      APP: { ...mockAppState, error: null },
+      APP: { ...state.APP, error: null },
     };
     expect(getError(stateWithoutError)).toBeNull();
   });
