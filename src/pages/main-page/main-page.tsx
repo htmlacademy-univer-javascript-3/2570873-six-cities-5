@@ -1,9 +1,9 @@
+import CitiesList from '@components/cities-list/cities-list';
+import Header from '@components/header/header';
+import Map from '@components/map/map';
+import OffersList from '@components/offers-list/offers-list';
+import SortingOptions from '@components/sorting-options/sorting-options';
 import React, { useMemo, useState } from 'react';
-import CitiesList from '../../components/cities-list/cities-list';
-import Header from '../../components/header/header';
-import Map from '../../components/map/map';
-import OffersList from '../../components/offers-list/offers-list';
-import SortingOptions from '../../components/sorting-options/sorting-options';
 import { SortOptions } from '../../const';
 import { useAppSelector } from '../../hooks/index';
 import { getCity, getSortType } from '../../store/app-data/selectors';

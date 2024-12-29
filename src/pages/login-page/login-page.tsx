@@ -1,8 +1,8 @@
+import Header from '@components/header/header';
+import LoginForm from '@components/login-form/login-form';
 import { AppRoute, AuthorizationStatus } from '@const';
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../../components/header/header';
-import LoginForm from '../../components/login-form/login-form';
 import { useAppSelector } from '../../hooks';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 

@@ -1,10 +1,10 @@
+import ReviewSendingForm from '@components/comment-form/comment-form';
+import Map from '@components/map/map';
+import NearbyOffersList from '@components/nearby-offers-list/nearby-offers-list';
+import ReviewsList from '@components/review-list/review-list';
 import { AppRoute, AuthorizationStatus } from '@const';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ReviewSendingForm from '../../components/comment-form/comment-form';
-import Map from '../../components/map/map';
-import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
-import ReviewsList from '../../components/review-list/review-list';
 import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { fetchOfferInDetailsAction, updateFavoriteStatusAction } from '../../store/api-actions';
 import { getNearbyOffers, getOfferInDetails, getOfferInDetailsDataLoadingStatus, getReviews } from '../../store/current-offer-data.ts/selectors';
