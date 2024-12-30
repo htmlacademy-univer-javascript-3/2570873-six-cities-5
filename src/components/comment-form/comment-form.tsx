@@ -6,6 +6,13 @@ import { submitReviewAction } from '../../store/api-actions';
 
 const MIN_REVIEW_LENGTH = 50;
 const MAX_REVIEW_LENGTH = 300;
+const RATING_OPTIONS = [
+  { value: 5, title: 'perfect' },
+  { value: 4, title: 'good' },
+  { value: 3, title: 'not bad' },
+  { value: 2, title: 'badly' },
+  { value: 1, title: 'terribly' },
+];
 
 export default function ReviewSendingForm(): JSX.Element {
   const { id } = useParams();
@@ -62,17 +69,6 @@ export default function ReviewSendingForm(): JSX.Element {
     [id, dispatch, formData, isFormValid]
   );
 
-  const ratingOptions = useMemo(
-    () => [
-      { value: 5, title: 'perfect' },
-      { value: 4, title: 'good' },
-      { value: 3, title: 'not bad' },
-      { value: 2, title: 'badly' },
-      { value: 1, title: 'terribly' },
-    ],
-    []
-  );
-
   return (
     <form
       className="reviews__form form"
@@ -84,7 +80,7 @@ export default function ReviewSendingForm(): JSX.Element {
         Your review
       </label>
       <div className="reviews__rating-form form__rating">
-        {ratingOptions.map(({ value, title }) => (
+        {RATING_OPTIONS.map(({ value, title }) => (
           <React.Fragment key={value}>
             <input
               className="form__rating-input visually-hidden"

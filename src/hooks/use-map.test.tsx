@@ -51,5 +51,4 @@ describe('Hook: useMap', () => {
       }
     );
   });
-
 });

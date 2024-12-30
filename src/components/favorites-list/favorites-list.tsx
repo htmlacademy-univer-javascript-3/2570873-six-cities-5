@@ -1,8 +1,8 @@
 import { CardType } from '@const';
-import { memo, useCallback } from 'react';
+import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Offers } from 'types/offer';
-import PlaceCard from '../../components/place-card/place-card';
+import PlaceCard from '../place-card/place-card';
 
 interface FavoritesListProps {
   cities: string[];
@@ -10,21 +10,10 @@ interface FavoritesListProps {
 }
 
 function FavoritesList({ cities, favorites }: FavoritesListProps): JSX.Element {
-  const renderCityFavorites = useCallback(
-    (city: string) =>
-      favorites
-        .filter((favorite) => favorite.city.name === city)
-        .map((favorite) => (
-          <PlaceCard
-            key={favorite.id}
-            offer={favorite}
-            onMouseEnter={() => {}}
-            onMouseLeave={() => {}}
-            cardType={CardType.Favorites}
-          />
-        )),
-    [favorites]
-  );
+  const cityFavoritesMap = useMemo(() => cities.reduce<Record<string, Offers>>((acc, city) => {
+    acc[city] = favorites.filter((favorite) => favorite.city.name === city);
+    return acc;
+  }, {}), [cities, favorites]);
 
   return (
     <ul className="favorites__list">
@@ -37,7 +26,17 @@ function FavoritesList({ cities, favorites }: FavoritesListProps): JSX.Element {
               </Link>
             </div>
           </div>
-          <div className="favorites__places">{renderCityFavorites(city)}</div>
+          <div className="favorites__places">
+            {cityFavoritesMap[city]?.map((favorite) => (
+              <PlaceCard
+                key={favorite.id}
+                offer={favorite}
+                onMouseEnter={() => {}}
+                onMouseLeave={() => {}}
+                cardType={CardType.Favorites}
+              />
+            ))}
+          </div>
         </li>
       ))}
     </ul>

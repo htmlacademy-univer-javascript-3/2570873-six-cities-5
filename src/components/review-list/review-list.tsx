@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 import { Reviews } from 'types/review';
 import ReviewItem from '../../components/review-item/review-item';
@@ -9,21 +8,17 @@ type ReviewsListProps = {
 };
 
 export default function ReviewsList({
-  reviews,
+  reviews = [],
 }: ReviewsListProps): JSX.Element {
-  const sortedReviews = useMemo(
-    () =>
-      reviews
-        ? [...reviews].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10)
-        : [],
-    [reviews]
-  );
+  const latestReviews = useMemo(() => [...reviews]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10), [reviews]);
 
   return (
-    <div>
-      {sortedReviews.length > 0 ? (
+    <div className="reviews__container">
+      {latestReviews.length > 0 ? (
         <ul className="reviews__list">
-          {sortedReviews.map((review) => (
+          {latestReviews.map((review) => (
             <ReviewItem key={review.id} review={review} />
           ))}
         </ul>

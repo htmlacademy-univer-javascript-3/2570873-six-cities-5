@@ -1,4 +1,4 @@
-import { AuthorizationStatus, SortOptions } from '@const';
+import { AuthorizationStatus, SortOption } from '@const';
 import { store } from '@store/index';
 import { City } from './city';
 import { Offers } from './offer';
@@ -6,7 +6,7 @@ import { OfferDetails } from './offer-details';
 import { Reviews } from './review';
 export type AppData = {
   city: City;
-  SortOptions: SortOptions;
+  sortOption: SortOption;
   error: string | null;
 };
 export type UserProcess = {

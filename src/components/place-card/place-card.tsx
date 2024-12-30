@@ -21,21 +21,26 @@ function PlaceCard({
 }: PlaceCardProps): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   const handleFavoriteClick = useCallback(() => {
     if (authorizationStatus === AuthorizationStatus.NoAuth) {
       navigate(AppRoute.Login);
-    } else {
-      dispatch(
-        updateFavoriteStatusAction({
-          id: offer.id,
-          isFavorite: !offer.isFavorite,
-        })
-      );
+      return;
     }
+    dispatch(
+      updateFavoriteStatusAction({
+        id: offer.id,
+        isFavorite: !offer.isFavorite,
+      })
+    );
   }, [authorizationStatus, navigate, dispatch, offer.id, offer.isFavorite]);
+
+  const imageWrapperClass = `${CardImageWrapperClass[cardType]} place-card__image-wrapper`;
+  const cardInfoClass =
+    cardType === CardType.Favorites ? 'favorites__card-info' : '';
+  const imageWidth = cardType === CardType.Favorites ? 150 : 260;
+  const imageHeight = cardType === CardType.Favorites ? 110 : 200;
 
   return (
     <article
@@ -48,24 +53,20 @@ function PlaceCard({
           <span>Premium</span>
         </div>
       )}
-      <div
-        className={`${CardImageWrapperClass[cardType]} place-card__image-wrapper`}
-      >
+
+      <div className={imageWrapperClass}>
         <Link to={`${AppRoute.Offer}/${offer.id}`}>
           <img
             className="place-card__image"
             src={offer.previewImage}
-            width={cardType === CardType.Favorites ? 150 : 260}
-            height={cardType === CardType.Favorites ? 110 : 200}
+            width={imageWidth}
+            height={imageHeight}
             alt="Place image"
           />
         </Link>
       </div>
-      <div
-        className={`${
-          cardType === CardType.Favorites ? 'favorites__card-info' : ''
-        } place-card__info`}
-      >
+
+      <div className={`${cardInfoClass} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{offer.price}</b>
@@ -86,12 +87,14 @@ function PlaceCard({
             </span>
           </button>
         </div>
+
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
             <span style={{ width: `calc(100% / 5 * ${offer.rating})` }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
+
         <h2 className="place-card__name">
           <Link to={`${AppRoute.Offer}/${offer.id}`}>{offer.title}</Link>
         </h2>

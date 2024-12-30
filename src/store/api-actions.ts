@@ -9,21 +9,9 @@ import { ReviewFormData } from 'types/review-data';
 import { AppDispatch, State } from 'types/state';
 import { User } from 'types/user';
 import { dropToken, saveToken } from '../services/token';
-import {
-  loadOfferInDetails,
-  setOfferInDetailsDataLoadingStatus,
-  sendReview as submitReview,
-} from './current-offer-data.ts/current-offer-data';
-import {
-  loadOffers,
-  setOffersDataLoadingStatus,
-  updateFavorites,
-} from './offers-data/offers-data';
-import {
-  setAuthorizationStatus,
-  setUserAvatarUrl,
-  setUserEmail,
-} from './user-process/user-process';
+import { loadOfferInDetails, setOfferInDetailsDataLoadingStatus, sendReview as submitReview, } from './current-offer-data/current-offer-data';
+import { loadOffers, setOffersDataLoadingStatus, updateFavorites, } from './offers-data/offers-data';
+import { setAuthorizationStatus, setUserAvatarUrl, setUserEmail, } from './user-process/user-process';
 
 export const fetchOffersAction = createAsyncThunk<
   void,

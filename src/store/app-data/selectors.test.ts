@@ -11,7 +11,7 @@ describe('Selectors: appData', () => {
   });
 
   it('should return the current sortType', () => {
-    expect(getSortType(state)).toBe(state.APP.SortOptions);
+    expect(getSortType(state)).toBe(state.APP.sortOption);
   });
 
   it('should return the error message if present', () => {

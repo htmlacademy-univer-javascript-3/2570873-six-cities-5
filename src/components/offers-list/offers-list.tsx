@@ -2,32 +2,26 @@ import PlaceCard from '@components/place-card/place-card';
 import { CardType } from '@const';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { Offer } from 'types/offer';
-import { OfferDetails } from 'types/offer-details';
 
 type OffersListProps = {
   offers: Offer[];
   onActiveOfferChange: (offerId: string | number | null) => void;
 };
 
-function OffersList({
-  offers,
-  onActiveOfferChange,
-}: OffersListProps): JSX.Element {
-  const [activeOffer, setActiveOffer] = useState<Offer | OfferDetails | null>(
-    null
-  );
+function OffersList({ offers, onActiveOfferChange }: OffersListProps): JSX.Element {
+  const [activeOfferId, setActiveOfferId] = useState<string | number | null>(null);
 
   useEffect(() => {
-    onActiveOfferChange(activeOffer ? activeOffer.id : null);
-  }, [activeOffer, onActiveOfferChange]);
+    onActiveOfferChange(activeOfferId);
+  }, [activeOfferId, onActiveOfferChange]);
 
-  const handleMouseEnter = useCallback((offer: Offer | OfferDetails) => {
-    setActiveOffer(offer);
+  const handleMouseEnter = useCallback((offerId: string | number) => {
+    setActiveOfferId(offerId);
   }, []);
 
-  const handleMouseLeave = () => {
-    setActiveOffer(null);
-  };
+  const handleMouseLeave = useCallback(() => {
+    setActiveOfferId(null);
+  }, []);
 
   return (
     <div className="cities__places-list places__list tabs__content">
@@ -35,7 +29,7 @@ function OffersList({
         <PlaceCard
           key={offer.id}
           offer={offer}
-          onMouseEnter={() => handleMouseEnter(offer)}
+          onMouseEnter={() => handleMouseEnter(offer.id)}
           onMouseLeave={handleMouseLeave}
           cardType={CardType.Regular}
         />
