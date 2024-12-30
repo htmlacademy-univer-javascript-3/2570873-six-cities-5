@@ -1,9 +1,9 @@
-import { Cities, SortOptions } from '@const';
+import { Cities, SortOption } from '@const';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { withHistory, withStore } from '../../mocks/mock-component';
 import { makeFakeOffers, makeFakeState } from '../../mocks/mocks';
-import MainPage from './main-page';
+import { MainPage } from './main-page';
 
 describe('Component: MainScreen', () => {
   it('renders main page with offers', () => {
@@ -32,7 +32,7 @@ describe('Component: MainScreen', () => {
       makeFakeState({
         APP: {
           city: Cities[0],
-          SortOptions: SortOptions.Popular,
+          sortOption: SortOption.Popular,
           error: null
         },
         OFFERS: {

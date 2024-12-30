@@ -2,7 +2,7 @@ import Header from '@components/header/header';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const NotFoundPage: React.FC = () => (
+export const NotFoundPage: React.FC = () => (
   <div className="page page--gray page--not-found">
     <Header />
     <main className="page__main page__main--not-found">
@@ -20,5 +20,3 @@ const NotFoundPage: React.FC = () => (
     </main>
   </div>
 );
-
-export default NotFoundPage;

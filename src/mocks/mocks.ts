@@ -1,4 +1,4 @@
-import { AuthorizationStatus, Cities, SortOptions } from '@const';
+import { AuthorizationStatus, Cities, SortOption } from '@const';
 import { Action, ThunkDispatch } from '@reduxjs/toolkit';
 import { createAPI } from '@services/api';
 import { datatype, date, image, internet, lorem, name, random } from 'faker';
@@ -76,7 +76,7 @@ export const makeFakeState = (initialState?: Partial<State>): State => ({
   },
   APP: {
     city: Cities[2],
-    SortOptions: SortOptions.PriceHighToLow,
+    sortOption: SortOption.PriceHighToLow,
     error: null
   },
   CURRENT_OFFER: {

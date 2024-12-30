@@ -1,4 +1,4 @@
-import { SortOptions } from '@const';
+import { SortOption } from '@const';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { setSortType } from '../../store/app-data/app-data';
@@ -12,10 +12,10 @@ function SortingOptions(): JSX.Element {
     setIsOpen((prevState) => !prevState);
   }, []);
 
-  const options = useMemo(() => Object.values(SortOptions), []);
+  const options = useMemo(() => Object.values(SortOption), []);
 
   const handleSortChange = useCallback(
-    (option: SortOptions) => {
+    (option: SortOption) => {
       dispatch(setSortType(option));
       setIsOpen(false);
     },

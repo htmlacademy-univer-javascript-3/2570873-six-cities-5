@@ -1,4 +1,4 @@
-import { SortOptions } from '@const';
+import { SortOption } from '@const';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
@@ -17,7 +17,7 @@ describe('Component: SortingOptions', () => {
           zoom: 12,
         },
       },
-      SortOptions: SortOptions.Popular,
+      sortOption: SortOption.Popular,
       error: null,
     },
   });
@@ -35,7 +35,7 @@ describe('Component: SortingOptions', () => {
     expect(sortOptionsList).toHaveClass('places__options--custom');
 
     const sortOptions = screen.getAllByRole('listitem');
-    expect(sortOptions).toHaveLength(Object.values(SortOptions).length);
+    expect(sortOptions).toHaveLength(Object.values(SortOption).length);
 
     const priceLowToHighOption = screen.getByText('Price: low to high', { selector: '.places__option' });
     fireEvent.click(priceLowToHighOption);
@@ -44,7 +44,7 @@ describe('Component: SortingOptions', () => {
     expect(actions).toEqual([
       {
         type: 'APP/setSortType',
-        payload: SortOptions.PriceLowToHigh,
+        payload: SortOption.PriceLowToHigh,
       },
     ]);
 
@@ -66,7 +66,7 @@ describe('Component: SortingOptions', () => {
               zoom: 12,
             },
           },
-          SortOptions: SortOptions.Popular,
+          sortOption: SortOption.Popular,
           error: null,
         },
       })
@@ -98,7 +98,7 @@ describe('Component: SortingOptions', () => {
               zoom: 12,
             },
           },
-          SortOptions: SortOptions.PriceLowToHigh,
+          sortOption: SortOption.PriceLowToHigh,
           error: null,
         },
       })
@@ -125,7 +125,7 @@ describe('Component: SortingOptions', () => {
               zoom: 12,
             },
           },
-          SortOptions: SortOptions.Popular,
+          sortOption: SortOption.Popular,
           error: null,
         },
       })

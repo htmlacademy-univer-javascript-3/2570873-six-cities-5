@@ -97,7 +97,7 @@ export const Cities = [
   },
 ];
 
-export enum SortOptions {
+export enum SortOption {
   Popular = 'Popular',
   PriceLowToHigh = 'Price: low to high',
   PriceHighToLow = 'Price: high to low',

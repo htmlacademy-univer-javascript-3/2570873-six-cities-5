@@ -4,12 +4,12 @@ import Map from '@components/map/map';
 import OffersList from '@components/offers-list/offers-list';
 import SortingOptions from '@components/sorting-options/sorting-options';
 import React, { useMemo, useState } from 'react';
-import { SortOptions } from '../../const';
+import { SortOption } from '../../const';
 import { useAppSelector } from '../../hooks/index';
 import { getCity, getSortType } from '../../store/app-data/selectors';
 import { getOffers } from '../../store/offers-data/selectors';
 
-const MainPage: React.FC = () => {
+export const MainPage: React.FC = () => {
   const offers = useAppSelector(getOffers);
   const city = useAppSelector(getCity);
   const sortType = useAppSelector(getSortType);
@@ -27,11 +27,11 @@ const MainPage: React.FC = () => {
 
     return [...filteredOffers].sort((a, b) => {
       switch (sortType) {
-        case SortOptions.PriceLowToHigh:
+        case SortOption.PriceLowToHigh:
           return a.price - b.price;
-        case SortOptions.PriceHighToLow:
+        case SortOption.PriceHighToLow:
           return b.price - a.price;
-        case SortOptions.TopRated:
+        case SortOption.TopRated:
           return b.rating - a.rating;
         default:
           return 0;
@@ -79,5 +79,3 @@ const MainPage: React.FC = () => {
     </div>
   );
 };
-
-export default MainPage;

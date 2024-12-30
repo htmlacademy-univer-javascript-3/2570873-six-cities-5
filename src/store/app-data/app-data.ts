@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { City } from 'types/city.ts';
 import { AppData } from 'types/state.ts';
-import { Cities, NameSpace, SortOptions } from '../../const.ts';
+import { Cities, NameSpace, SortOption } from '../../const.ts';
 
 const initialState: AppData = {
   city: Cities[0],
-  SortOptions: SortOptions.Popular,
+  sortOption: SortOption.Popular,
   error: null,
 };
 
@@ -16,8 +16,8 @@ export const appData = createSlice({
     changeCity: (state, action: PayloadAction<City>) => {
       state.city = action.payload;
     },
-    setSortType: (state, action: PayloadAction<SortOptions>) => {
-      state.SortOptions = action.payload;
+    setSortType: (state, action: PayloadAction<SortOption>) => {
+      state.sortOption = action.payload;
     },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;

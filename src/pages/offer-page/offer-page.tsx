@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { fetchOfferInDetailsAction, updateFavoriteStatusAction } from '../../store/api-actions';
-import { getNearbyOffers, getOfferInDetails, getOfferInDetailsDataLoadingStatus, getReviews } from '../../store/current-offer-data.ts/selectors';
+import { getNearbyOffers, getOfferInDetails, getOfferInDetailsDataLoadingStatus, getReviews } from '../../store/current-offer-data/selectors';
 import { getOffers } from '../../store/offers-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 
